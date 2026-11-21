@@ -211,23 +211,22 @@ static void slots_read(void) {
          * (navigation.c set_child; a Network row draws it 1:1, so one over 52 px shows its middle),
          * else stream_app (one over ART_MAX px either way, or whose size can't be read, counts as
          * none: demo decodes it whole) */
-        /* An icon-<theme>.png or icon-40-<theme>.png (theme()->name in lower case: minimal,
-         * modern, classic) comes before the plain ones under that theme, for an app drawn to match
-         * it; read at each scan, so a theme change shows at the next. The last good one tried is
-         * taken. */
+        /* An icon-<theme>.png or icon-40-<theme>.png (theme()->name in lower case, a space a dash:
+         * minimal, modern, classic, classic-modern) comes before the plain ones under that theme,
+         * for an app drawn to match it; read at each scan, so a theme change shows at the next. The
+         * last good one tried is taken. */
         static const char *const icons[2] = { "icon-40", "icon" };
         char look[16];
         unsigned n = 0;
         for (const char *c = theme()->name; c && *c && n < sizeof look - 1; ++c)
-            look[n++] = (char)(*c >= 'A' && *c <= 'Z' ? *c + 32 : *c);
+            look[n++] = (char)(*c >= 'A' && *c <= 'Z' ? *c + 32 : *c == ' ' ? '-' : *c);
         look[n] = 0;
         tk_snprintf(a->icon, sizeof a->icon, "stream_app");
         for (int t = 0; t < 2; ++t)
             for (int i = 1; i >= 0; --i) {
                 int w = 0, h = 0;
                 tk_snprintf(path, sizeof path, CARD "/%s/%s%s%s.png", e->d_name,
-                            icons[a->row == ROW_NETWORK ? 1 - i : i],
-                            t ? "-" : "", t ? look : "");
+                            icons[a->row == ROW_NETWORK ? 1 - i : i], t ? "-" : "", t ? look : "");
                 if ((!t || n) && picture_size(path, &w, &h) && w && h && w <= ART_MAX &&
                     h <= ART_MAX)
                     tk_snprintf(a->icon, sizeof a->icon, "file://%s", path);

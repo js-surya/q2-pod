@@ -6886,11 +6886,19 @@ def test_a_card_apps_first_song_waits_while_a_game_has_the_sound(fw, audio, time
 def test_a_theme_named_icon_is_taken_under_that_theme(fw, settings_read, theme, want):
     # icon-<theme>.png and icon-40-<theme>.png (theme()->name, lower case) before the plain ones: an app
     # drawn for Minimal's grey discs, its own icon elsewhere. Read at each scan, so a theme change shows
-    # at the next. Network and Library rows take the 52 px first, as with the plain names.
+    # at the next. Network rows take the 52 px first, as with the plain names.
     boot(fw, settings_read, theme)
     card(fw, vpn=(b'name=Tunnel\nrow=network\n', ('icon.png', 'icon-40.png', 'icon-minimal.png', 'icon-40-minimal.png')))
     assert fw.fn('addon_network', C.c_int)() == 1
     assert fw.fn('addon_network_icon', C.c_char_p, C.c_int)(0) == b'file:///mnt/mmc/.vpn/' + want
+
+
+def test_a_theme_name_s_space_is_a_dash(fw, settings_read):
+    # Classic Modern's icon is icon-classic-modern.png: a file name with no space in it
+    boot(fw, settings_read, b'3')
+    card(fw, vpn=(b'name=Tunnel\nrow=network\n', ('icon.png', 'icon-classic-modern.png')))
+    assert fw.fn('addon_network', C.c_int)() == 1
+    assert fw.fn('addon_network_icon', C.c_char_p, C.c_int)(0) == b'file:///mnt/mmc/.vpn/icon-classic-modern.png'
 
 
 def test_a_theme_icon_alone_is_taken_too(fw, settings_read):
