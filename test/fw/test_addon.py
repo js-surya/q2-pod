@@ -5380,7 +5380,8 @@ def test_an_install_s_toast_leaves_the_open_page_s_rows_on_their_apps(fw, row):
     p = Page(fw, b'name=Foo\nrow=%s\n' % row, opens=False)  # the page built, Foo its only app row
     p.world.files.update({b'/mnt/mmc/.bar/q2app': b'name=Bar\nrow=%s\n' % row, b'/mnt/mmc/.bar/q2-bar': b'ELF'})
     p.world.dirs[b'/mnt/mmc'].append(b'.bar')
-    where = {b'streaming': b'Streaming', b'library': b"Library's Apps", b'games': b"Library's Games"}[row]
+    where = {b'streaming': b'Streaming', b'library': b"Library's Apps", b'games': b"Library's Games",
+             b'network': b'Network settings'}[row]
     assert fw.fn('addon_where', C.c_char_p, C.c_char_p)(b'bar') == where
     PRESSES.get(row, lambda fw, k: fw.fn('addon_open', C.c_int, C.c_void_p, C.c_void_p)(k, None))(fw, 0)
     assert p.top.title == b'Foo'
