@@ -1,6 +1,7 @@
 # Changelog
 
 - **1.9.5**:
+  - Apps: a card app can name apps it needs: Q2 Pod starts them first and the App Store installs them with it.
   - Library: going back to **Albums** from an album, Now Playing or the hold menu shows the list at once, unless the library has changed or is updating. It used to read and sort the whole library again each time.
 - **1.9.4**:
   - Playlists: holding Play/Pause on a Cover Flow cover offers **Add to Playlist**, which adds that album's songs. From an **Albums** row it adds only that album, not every album with the same name.
